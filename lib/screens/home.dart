@@ -5,7 +5,16 @@ import 'package:z_recorder/widgets/input_field.dart';
 import 'package:z_recorder/widgets/list_of_files.dart';
 import 'package:z_recorder/widgets/player_video.dart';
 
+//The home page
+
 class Home extends StatelessWidget {
+
+  /// (1) - If the variable directory(managed by model InformationModel) is empty
+  /// show a empty container, else display the files of extension .mp4
+  /// through the listOfFiles widget.
+  /// (2) - If the list(FileSystemEntity) videos(managed by model InformationModel)
+  /// is empty show a empty container, else display a widget responsible to reproduce
+  /// the videos through the PlayerVideo. The PlayerVideo receive the model
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +31,11 @@ class Home extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   InputField(),
-                  model.directory != "" ? ListOfFiles() : Container(),
-                  model.videos.isEmpty ? Container() : PlayerVideo(model: model,)
+                  model.directory != "" ? ListOfFiles() : Container(), //(1)
+                  model.videos.isEmpty ? Container() : PlayerVideo(model: model,) //(2)
                 ],
               ),
             ),
-            /*floatingActionButton: IconButton(
-                icon: Icon(Icons.navigate_next),
-                onPressed: (){
-                  model.directory = inputController.text;
-                }
-            ),*/
           );
         }
     );

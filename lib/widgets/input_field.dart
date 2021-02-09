@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:z_recorder/backend/information_model.dart';
 
+
+///Widget display a TextField to receive the directory. Send the directory typed
+///by user to Information Model;
 class InputField extends StatelessWidget {
 
   @override
@@ -21,6 +24,7 @@ class InputField extends StatelessWidget {
                   border: InputBorder.none
               ),
               onSubmitted: (value){
+                //send the directory to model(InformationModel)
                 model.changeDirectory(value);
               },
             ),

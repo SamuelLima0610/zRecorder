@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+
 
 class VideoScreen extends StatefulWidget {
   const VideoScreen({
@@ -15,28 +17,62 @@ class VideoScreen extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoScreen> {
+
+  FlutterSoundRecorder _mRecorder = FlutterSoundRecorder();
   VideoPlayerController _controller;
+  bool _mRecorderIsInited = false;
+  final String _mPath = 'flutter_sound_example3.aac';
   bool initialized = false;
 
   @override
   void initState() {
     _initVideo();
+    openTheRecorder().then((value) {
+      setState(() {
+        _mRecorderIsInited = true;
+      });
+    });
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _mRecorder.closeAudioSession();
+    _mRecorder = null;
     super.dispose();
   }
 
+  Future<void> openTheRecorder() async {
+    await _mRecorder.openAudioSession();
+    _mRecorderIsInited = true;
+  }
+
+  void stopRecorder() async {
+    await _mRecorder.stopRecorder().then((value) {
+    });
+  }
+
+  void record(){
+    _mRecorder
+        .startRecorder(
+      toFile: widget.videoFile.parent.path + "/" + _mPath,
+      //codec: Codec.aacADTS,
+    ).then((value) {
+      setState(() {});
+    });
+  }
+
   _initVideo() async {
-    final video = await widget.videoFile;
+    final video = widget.videoFile;
     _controller = VideoPlayerController.file(video)
-    // Play the video again when it ends
-      ..setLooping(true)
+    /* Play the video again when it ends
+      ..setLooping(true)*/
     // initialize the controller and notify UI when done
-      ..initialize().then((_) => setState(() => initialized = true));
+      ..initialize().then((_){
+        setState(() => initialized = true);
+        _controller.pause();
+      });
   }
 
   @override
@@ -60,9 +96,11 @@ class _VideoScreenState extends State<VideoScreen> {
               // If the video is playing, pause it.
               if (_controller.value.isPlaying) {
                 _controller.pause();
+                stopRecorder();
               } else {
                 // If the video is paused, play it.
                 _controller.play();
+                record();
               }
             });
           },

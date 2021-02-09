@@ -1,8 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
+import 'package:z_recorder/backend/information_model.dart';
 
 class ListFiles extends StatefulWidget {
+
+  InformationModel model;
+
+  ListFiles({this.model});
+
   @override
   _ListFilesState createState() => _ListFilesState();
 }

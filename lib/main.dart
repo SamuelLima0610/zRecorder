@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:z_recorder/backend/information_model.dart';
+import 'package:z_recorder/codeteste/play_video.dart';
 import 'package:z_recorder/screens/home.dart';
 
-import 'codeteste/play_video.dart';
-//import 'package:video_player/video_player.dart';
-//import 'package:z_recorder/codeteste/listFIles.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -21,7 +22,15 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home()
+      home: ScopedModel(
+          model: InformationModel(),
+          child: Home()
+      )
     );
   }
 }
+
+//ScopedModel(
+//           model: InformationModel(),
+//           child: Home()
+//       )

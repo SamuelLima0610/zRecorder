@@ -6,6 +6,8 @@ import 'package:path/path.dart' as path;
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:z_recorder/widgets/play_audio.dart';
 
+//Widget responsible to display the audios of a specific video
+
 // ignore: must_be_immutable
 class ListOfAudios extends StatefulWidget {
 

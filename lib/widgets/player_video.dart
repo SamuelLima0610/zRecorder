@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:z_recorder/backend/information_model.dart';
-import 'package:z_recorder/widgets/list_of_audios.dart';
 import 'package:z_recorder/widgets/studio_options.dart';
 
 // ignore: must_be_immutable
@@ -12,6 +10,7 @@ class PlayerVideo extends StatefulWidget {
 
   InformationModel model;
 
+  //constructor
   PlayerVideo({this.model});
 
   @override
@@ -20,10 +19,14 @@ class PlayerVideo extends StatefulWidget {
 
 class _PlayerVideoState extends State<PlayerVideo> {
 
+  //check if the video files was initialized
   bool initialized = false;
   InformationModel model;
+  //List of VideoPlayerController to control the videos
   List<VideoPlayerController> controllers;
 
+
+  //constructor
   _PlayerVideoState(this.model);
 
   @override
@@ -40,13 +43,14 @@ class _PlayerVideoState extends State<PlayerVideo> {
     super.dispose();
   }
 
+  //Initialized the display of video
   _initVideo(){
     controllers = List.generate(model.videos.length, (index) => null);
     int index = 0;
+    //get the list(the videos' path) in the model and create a VideoPlayerController
+    //for each file
     controllers = model.videos.map((e){
       VideoPlayerController _controller = VideoPlayerController.file(File(model.videos[index].path))
-      // Play the video again when it ends
-      //  ..setLooping(true)
       // initialize the controller and notify UI when done
         ..initialize().then((value) {
           setState(() => {initialized = true});
@@ -60,11 +64,12 @@ class _PlayerVideoState extends State<PlayerVideo> {
 
   @override
   Widget build(BuildContext context) {
+    //control the execution the video when the audio is playing
     if(initialized && model.playAudio && model.isPlaying) {
+      //set the video to begin
       controllers[model.index].seekTo(Duration(seconds: 0)).then((value){
         controllers[model.index].play();
       });
-      controllers[model.index].play();
     }
     else if(initialized && model.playAudio && !model.isPlaying){
       controllers[model.index].pause();
@@ -98,7 +103,6 @@ class _PlayerVideoState extends State<PlayerVideo> {
                 child: VideoPlayer(controllers[model.index]),
               ),
               StudioOptions(videoFile: model.videos[model.index], model: model),
-              //ListOfAudios(pathParent:  model.videos[model.index].parent,file: model.videos[model.index],)
             ],
           ),
           color: Colors.white24,
@@ -106,6 +110,7 @@ class _PlayerVideoState extends State<PlayerVideo> {
     ): Container();
   }
 
+  //check if the video is in the end and restart the execution
   void ifLopingDoThis(){
     if(controllers[model.index].value.position == controllers[model.index].value.duration)
       controllers[model.index].seekTo(Duration(seconds: 0)).then((value){
